@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from app.api import geofences
+from app.api import geofences, locations
 from datetime import datetime
 
 app = FastAPI(title="Geofence Event Detection API", version="1.0.0")
 
 # Include the geofence endpoints
 app.include_router(geofences.router)
+app.include_router(locations.router)
 
 @app.get("/")
 def read_root():
