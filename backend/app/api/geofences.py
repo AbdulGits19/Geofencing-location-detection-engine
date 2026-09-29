@@ -37,3 +37,20 @@ def create_geofence(geofence: GeofenceCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=List[GeofenceResponse])
 def get_geofences(db: Session = Depends(get_db)):
     return db.query(Geofence).all()
+
+@router.put("/{geofence_id}", response_model=GeofenceResponse)
+def toggle_geofence(geofence_id: int, is_enabled: bool, db: Session = Depends(get_db)):
+    db_geofence = db.query(Geofence).filter(Geofence.id == geofence_id).first()
+    if db_geofence:
+        db_geofence.is_enabled = is_enabled
+        db.commit()
+        db.refresh(db_geofence)
+    return db_geofence
+
+@router.delete("/{geofence_id}")
+def delete_geofence(geofence_id: int, db: Session = Depends(get_db)):
+    db_geofence = db.query(Geofence).filter(Geofence.id == geofence_id).first()
+    if db_geofence:
+        db.delete(db_geofence)
+        db.commit()
+    return {"status": "success", "message": "Geofence deleted"}
