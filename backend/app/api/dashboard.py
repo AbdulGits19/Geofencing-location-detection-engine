@@ -8,7 +8,7 @@ from app.models.event import GeofenceEvent
 from app.schemas.extended import UserCreate, DeviceCreate, AnalyticsDashboard
 from app.schemas.location import GeofenceEventResponse
 
-router = APIRouter(tags=["Dashboard & System"])
+router = APIRouter(tags=["Core Entities"])
 
 @router.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
