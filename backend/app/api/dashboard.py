@@ -10,6 +10,10 @@ from app.schemas.location import GeofenceEventResponse
 
 router = APIRouter(tags=["Core Entities"])
 
+@router.get("/users/")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(User).all()
+
 @router.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = User(username=user.username, email=user.email)
@@ -17,6 +21,10 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+@router.get("/devices/")
+def get_devices(db: Session = Depends(get_db)):
+    return db.query(Device).all()
 
 @router.post("/devices/")
 def create_device(device: DeviceCreate, db: Session = Depends(get_db)):
@@ -44,5 +52,5 @@ def get_analytics(db: Session = Depends(get_db)):
         "active_geofences": active_geo,
         "total_devices": total_dev,
         "total_events_logged": total_evt,
-        "recent_events": [{"event": e.event_type, "time": e.timestamp} for e in recent]
+        "recent_events": [{"event": e.event_type, "time": str(e.timestamp)} for e in recent]
     }
